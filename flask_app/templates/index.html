@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Flipkart Sentiment Analyzer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="card">
+    <h1>SENTIMENT ANALYZER</h1>
+    <p class="subtitle">AI-powered sentiment analysis of product reviews</p>
+
+    <form method="POST" onsubmit="showLoader()">
+        <textarea name="review"
+                  placeholder="Paste a product review here…"
+                  required></textarea>
+        <button type="submit">Analyze sentiment</button>
+    </form>
+
+    <div class="loader" id="loader">
+        Analyzing review…
+    </div>
+
+    {% if prediction %}
+        <div class="result {{ sentiment }}">
+            {{ prediction }}
+        </div>
+
+        <div class="meter">
+            <div class="meter-label">
+                Confidence: {{ confidence }}%
+            </div>
+            <div class="meter-track">
+                <div class="meter-fill {{ sentiment }}-fill"
+                     style="--fill-width: {{ confidence }}%;">
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="footer">
+        Built by Deepika A
+    </div>
+</div>
+
+<script>
+function showLoader() {
+    document.getElementById("loader").style.display = "block";
+}
+</script>
+
+</body>
+</html>

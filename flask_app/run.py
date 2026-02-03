@@ -1,0 +1,5 @@
+from flask_app.app import flask_app
+
+if __name__ == "__main__":
+    print("RUN.PY STARTED")
+    flask_app.run(host="127.0.0.1", port=5000, debug=True)
