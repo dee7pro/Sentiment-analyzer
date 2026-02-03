@@ -7,64 +7,12 @@ from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 
 # -----------------------------
-# Page Configuration (ONLY config here)
+# Page Configuration
 # -----------------------------
 st.set_page_config(
     page_title="SENTIMENT ANALYSER",
     page_icon="💬",
     layout="centered"
-)
-
-# -----------------------------
-# Custom Dark Glass Theme (CSS)
-# -----------------------------
-st.markdown(
-    """
-    <style>
-    .stApp {
-        background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-        color: #eaeaea;
-        font-family: 'Inter', sans-serif;
-    }
-
-    textarea {
-        background-color: #111827 !important;
-        color: #e5e7eb !important;
-        border-radius: 12px !important;
-        border: 1px solid #374151 !important;
-    }
-
-    button[kind="primary"] {
-        background: linear-gradient(90deg, #7c3aed, #9333ea);
-        color: white !important;
-        border-radius: 12px !important;
-        font-weight: 600;
-        padding: 0.6rem 1.2rem;
-        transition: 0.3s;
-    }
-
-    button[kind="primary"]:hover {
-        transform: scale(1.03);
-        background: linear-gradient(90deg, #9333ea, #7c3aed);
-    }
-
-    div[data-testid="metric-container"] {
-        background-color: rgba(17, 24, 39, 0.8);
-        border-radius: 14px;
-        padding: 1rem;
-        border: 1px solid #374151;
-    }
-
-    .stProgress > div > div {
-        background-image: linear-gradient(90deg, #22c55e, #16a34a);
-    }
-
-    footer {
-        visibility: hidden;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
 )
 
 # -----------------------------
