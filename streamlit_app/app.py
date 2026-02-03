@@ -1,42 +1,49 @@
 import os
-import streamlit as st
-import joblib
 import re
+import joblib
 import nltk
+import streamlit as st
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-
-model = joblib.load(os.path.join(BASE_DIR, "sentiment_model.pkl"))
-vectorizer = joblib.load(os.path.join(BASE_DIR, "tfidf_vectorizer.pkl"))
-
-
-
-# Page config
+# -----------------------------
+# Page Configuration
+# -----------------------------
 st.set_page_config(
-    page_title="Sentiment Analyzer",
+    page_title="SENTIMENT ANALYSER",
     page_icon="💬",
     layout="centered"
 )
 
-# Download NLTK data (Streamlit-safe)
+# -----------------------------
+# Paths (Streamlit-safe)
+# -----------------------------
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+# -----------------------------
+# Load NLTK resources (cached)
+# -----------------------------
 @st.cache_resource
-def load_nltk():
+def setup_nltk():
     nltk.download("stopwords")
     nltk.download("wordnet")
 
-load_nltk()
+setup_nltk()
 
-# Load model & vectorizer
+# -----------------------------
+# Load model & vectorizer ONCE
+# -----------------------------
 @st.cache_resource
 def load_model():
-    model = joblib.load("sentiment_model.pkl")
-    vectorizer = joblib.load("tfidf_vectorizer.pkl")
+    model = joblib.load(os.path.join(BASE_DIR, "sentiment_model.pkl"))
+    vectorizer = joblib.load(os.path.join(BASE_DIR, "tfidf_vectorizer.pkl"))
     return model, vectorizer
 
 model, vectorizer = load_model()
 
+# -----------------------------
+# Text preprocessing
+# -----------------------------
 stop_words = set(stopwords.words("english"))
 lemmatizer = WordNetLemmatizer()
 
@@ -48,34 +55,39 @@ def preprocess(text):
     text = " ".join(lemmatizer.lemmatize(w) for w in text.split())
     return text
 
-# ---------- UI ----------
-st.title("SENTIMENT ANALYZER")
-st.caption("AI-powered sentiment analysis of product reviews")
+# -----------------------------
+# UI
+# -----------------------------
+st.title("SENTIMENT ANALYSER")
+st.caption("AI-powered sentiment analytics for product reviews")
 
 review = st.text_area(
     "Paste a product review below",
-    height=150,
-    placeholder="Paste a product review here..."
+    height=160,
+    placeholder="Example: The shuttlecock quality is excellent and lasts long..."
 )
 
-if st.button("Analyze sentiment"):
+if st.button("Analyze Sentiment"):
     if review.strip() == "":
-        st.warning("Please enter a review.")
+        st.warning("Please enter a review to analyze.")
     else:
-        processed = preprocess(review)
-        vector = vectorizer.transform([processed])
+        cleaned = preprocess(review)
+        vector = vectorizer.transform([cleaned])
 
-        proba = model.predict_proba(vector)[0]
-        pred = proba.argmax()
-        confidence = round(proba[pred] * 100, 1)
+        probabilities = model.predict_proba(vector)[0]
+        prediction = probabilities.argmax()
+        confidence = round(probabilities[prediction] * 100, 1)
 
-        if pred == 1:
-            st.success("Positive 😊")
+        if prediction == 1:
+            st.success("✅ Positive Sentiment")
         else:
-            st.error("Negative 😞")
+            st.error("❌ Negative Sentiment")
 
-        st.metric("Confidence", f"{confidence}%")
+        st.metric("Confidence Score", f"{confidence}%")
         st.progress(confidence / 100)
 
+# -----------------------------
+# Footer
+# -----------------------------
 st.markdown("---")
-st.caption("Built by Deepika A")
+st.caption("Built by Deepika A | Deployed on Streamlit Cloud")
